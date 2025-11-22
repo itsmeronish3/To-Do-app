@@ -6,56 +6,105 @@
     <title>TODO LIST - Home</title>
 
     <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        .form-control {
-            padding: 1rem .75rem !important;
+        body {
+            background: #e7f0ff;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .page-title {
+            font-weight: 700;
+            color: #004aad;
+        }
+        .task-section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+        }
+        .task-card {
+            border-left: 6px solid #004aad;
+            transition: 0.2s;
+        }
+        .task-card:hover {
+            transform: scale(1.02);
+            border-left-color: #ffcc00;
+        }
+        .completed-card {
+            background: #f6f7f8;
+            border-left: 6px solid #ffcc00;
+        }
+        .btn-add {
+            background-color: #004aad;
+            border: none;
+        }
+        .btn-add:hover {
+            background-color: #00357a;
+        }
+        input.form-control {
+            border-radius: 10px;
         }
         .task-btns a {
-            margin-left: 5px;
+            margin-left: 6px;
+        }
+        .yellow-badge {
+            background: #ffcc00 !important;
+            color: black;
+            font-weight: 600;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h3 class="pt-5 text-center">Django ToDo App</h3>
-        <div class="row mt-4">
-            <div class="col-md-7 col-lg-7" style="height: 450px; overflow-y: auto;">
-                <h4>My Day</h4>
-                <p class="text-muted">{% now "jS F Y" %}</p>
 
-                <!-- List of tasks -->
-                {% for task in tasks %}
-                <div class="card m-1">
-                    <div class="card-body">
-                        {{ task.task }}
-                        <span class="task-btns float-end">
-                            <a href="{% url 'mark_as_done' task.id %}" class="btn btn-success btn-sm"><i class="fa fa-check"></i></a>
-                            <a href="{% url 'edit_task' task.id %}" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i></a>
-                            <a href="{% url 'delete_task' task.id %}" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
-                        </span>
+<body>
+
+    <div class="container py-5">
+        <h2 class="text-center page-title">My To-Do List</h2>
+        <p class="text-center text-muted">{% now "jS F Y" %}</p>
+
+        <div class="row mt-4">
+
+            <!-- Left: Pending Tasks -->
+            <div class="col-md-7">
+                <div class="task-section mb-4">
+                    <h4 class="mb-3">Today's Tasks <span class="badge yellow-badge">{{ tasks|length }}</span></h4>
+
+                    {% for task in tasks %}
+                    <div class="card task-card mb-2">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <span>{{ task.task }}</span>
+                            <span class="task-btns">
+                                <a href="{% url 'mark_as_done' task.id %}" class="btn btn-success btn-sm"><i class="fa fa-check"></i></a>
+                                <a href="{% url 'edit_task' task.id %}" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+                                <a href="{% url 'delete_task' task.id %}" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                            </span>
+                        </div>
                     </div>
+                    {% empty %}
+                    <p class="text-muted">No tasks to show.</p>
+                    {% endfor %}
                 </div>
-                {% empty %}
-                <p>No tasks yet!</p>
-                {% endfor %}
             </div>
 
-            <div class="col-md-5 col-lg-5">
-                <h4>Completed Tasks</h4>
-                {% for task in completed_tasks %}
-                <div class="card m-1">
-                    <div class="card-body">
-                        {{ task.task }}
+            <!-- Right: Completed -->
+            <div class="col-md-5">
+                <div class="task-section">
+                    <h4 class="mb-3">Completed <span class="badge bg-success">{{ completed_tasks|length }}</span></h4>
+
+                    {% for task in completed_tasks %}
+                    <div class="card completed-card mb-2">
+                        <div class="card-body">
+                            <del>{{ task.task }}</del>
+                        </div>
                     </div>
+                    {% empty %}
+                    <p class="text-muted">No completed tasks yet.</p>
+                    {% endfor %}
                 </div>
-                {% empty %}
-                <p>No completed tasks yet!</p>
-                {% endfor %}
             </div>
         </div>
 
@@ -64,11 +113,13 @@
             <div class="col-md-12">
                 <form action="{% url 'add_task' %}" method="POST" class="d-flex">
                     {% csrf_token %}
-                    <input type="text" name="task" class="form-control me-2" placeholder="Add a new task" required>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Add</button>
+                    <input type="text" name="task" class="form-control me-2" placeholder="Add a new task..." required>
+                    <button type="submit" class="btn btn-add text-white px-4"><i class="fa fa-plus"></i> Add</button>
                 </form>
             </div>
         </div>
+
     </div>
+
 </body>
 </html>
