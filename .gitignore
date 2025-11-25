@@ -1,0 +1,55 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+env/
+venv/
+.venv/
+
+# Django local database
+db.sqlite3
+
+# Django media and static collected files
+media/
+staticfiles/
+
+# Logs and sensitive/local settings
+*.log
+.env
+.env.*
+
+# Pytest, coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Wheel files
+*.whl
+
+# C extensions
+*.so
+
+# Ignore compiled C/C++ objects
+*.o
